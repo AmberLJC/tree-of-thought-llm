@@ -37,14 +37,15 @@ def get_proposals(task, x, y):
     proposals = gpt(propose_prompt, n=1, stop=None)[0].split('\n')
     return [y + _ + '\n' for _ in proposals]
 
-def get_samples(task, x, y, n_generate_sample, prompt_sample, stop):
+def get_samples(task, x, y, n_generate_sample, prompt_sample, stop, args):
     if prompt_sample == 'standard':
         prompt = task.standard_prompt_wrap(x, y)
     elif prompt_sample == 'cot':
         prompt = task.cot_prompt_wrap(x, y)
     else:
         raise ValueError(f'prompt_sample {prompt_sample} not recognized')
-    samples = gpt(prompt, n=n_generate_sample, stop=stop)
+    
+    samples = gpt(prompt, model=args.backend,  n=n_generate_sample, stop=stop)
     return [y + _ for _ in samples]
 
 def solve(args, task, idx, to_print=True):
@@ -57,7 +58,7 @@ def solve(args, task, idx, to_print=True):
     for step in range(task.steps):
         # generation
         if args.method_generate == 'sample':
-            new_ys = [get_samples(task, x, y, args.n_generate_sample, prompt_sample=args.prompt_sample, stop=task.stops[step]) for y in ys]
+            new_ys = [get_samples(task, x, y, args.n_generate_sample, prompt_sample=args.prompt_sample, stop=task.stops[step], args=args) for y in ys]
         elif args.method_generate == 'propose':
             new_ys = [get_proposals(task, x, y) for y in ys]
         new_ys = list(itertools.chain(*new_ys))
@@ -93,5 +94,5 @@ def naive_solve(args, task, idx, to_print=True):
     gpt = partial(gpt, model=args.backend, temperature=args.temperature)
     print(gpt)
     x = task.get_input(idx)  # input
-    ys = get_samples(task, x, '', args.n_generate_sample, args.prompt_sample, stop=None)
+    ys = get_samples(task, x, '', args.n_generate_sample, args.prompt_sample, stop=None, args=args)
     return ys, {}

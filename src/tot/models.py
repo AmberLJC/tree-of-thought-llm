@@ -17,11 +17,11 @@ if api_base != "":
 
 
 from openai import AzureOpenAI
-client = AzureOpenAI( 
+client = AzureOpenAI(
         api_key=os.environ['OPENAI_API_KEY'],
         azure_endpoint=os.environ['OPENAI_API_BASE'],
         api_version=os.environ['API_VERSION'],
-        organization= os.environ['OPENAI_ORGANIZATION'],
+        organization=os.environ['OPENAI_ORGANIZATION'],
     )
 @backoff.on_exception(backoff.expo, openai.RateLimitError)
 def completions_with_backoff(**kwargs):
