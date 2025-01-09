@@ -27,17 +27,17 @@ Also check [its tweet thread](https://twitter.com/ShunyuYao12/status/16593575474
 ## Setup
 1. Set up OpenAI API key and store in environment variable ``OPENAI_API_KEY`` (see [here](https://help.openai.com/en/articles/5112595-best-practices-for-api-key-safety)). 
 
-2. Install `tot` package in two ways:
-- Option 1: Install from PyPI
-```bash
-pip install tree-of-thoughts-llm
-```
-- Option 2: Install from source
+2. Install `tot` package from source:
 ```bash
 git clone https://github.com/princeton-nlp/tree-of-thought-llm
 cd tree-of-thought-llm
+# install the conda environment
+conda create --name tree-of-thought-env python=3.12 -y
+conda activate tree-of-thought-env
 pip install -r requirements.txt
+pip install -r api_req.txt
 pip install -e .  # install `tot` package
+source env.sh # set up the environment variables
 ```
 
 
@@ -70,7 +70,7 @@ Run experiments via ``sh scripts/{game24, text, crosswords}/{standard_sampling, 
 The very simple ``run.py`` implements the ToT + BFS algorithm, as well as the naive IO/CoT sampling. Some key arguments:
 
 - ``--naive_run``: if True, run naive IO/CoT sampling instead of ToT + BFS.
--  ``--prompt_sample`` (choices=[``standard``, ``cot``]): sampling prompt
+- ``--prompt_sample`` (choices=[``standard``, ``cot``]): sampling prompt
 - ``--method_generate`` (choices=[``sample``, ``propose``]): thought generator, whether to sample independent thoughts (used in Creative Writing) or propose sequential thoughts (used in Game of 24)
 - ``--method_evaluate`` (choices=[``value``, ``vote``]): state evaluator, whether to use the value states independently (used in Game of 24) or vote on states together (used in Creative Writing)
 - ``--n_generate_sample``: number of times to prompt for thought generation

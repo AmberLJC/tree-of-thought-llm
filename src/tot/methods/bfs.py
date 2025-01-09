@@ -1,7 +1,7 @@
 import itertools
 import numpy as np
 from functools import partial
-from tot.models import gpt
+from src.tot.models import gpt
 
 def get_value(task, x, y, n_evaluate_sample, cache_value=True):
     value_prompt = task.value_prompt_wrap(x, y)
@@ -33,6 +33,7 @@ def get_votes(task, x, ys, n_evaluate_sample):
 
 def get_proposals(task, x, y): 
     propose_prompt = task.propose_prompt_wrap(x, y)
+    # print(">>>>>>>>>>>> Propose Prompt:", propose_prompt)
     proposals = gpt(propose_prompt, n=1, stop=None)[0].split('\n')
     return [y + _ + '\n' for _ in proposals]
 
@@ -78,7 +79,7 @@ def solve(args, task, idx, to_print=True):
         # log
         if to_print: 
             sorted_new_ys, sorted_values = zip(*sorted(zip(new_ys, values), key=lambda x: x[1], reverse=True))
-            print(f'-- new_ys --: {sorted_new_ys}\n-- sol values --: {sorted_values}\n-- choices --: {select_new_ys}\n')
+            print(f'-- new_ys --: {sorted_new_ys}\n-- sorted values --: {sorted_values}\n-- choices --: {select_new_ys}\n')
         
         infos.append({'step': step, 'x': x, 'ys': ys, 'new_ys': new_ys, 'values': values, 'select_new_ys': select_new_ys})
         ys = select_new_ys

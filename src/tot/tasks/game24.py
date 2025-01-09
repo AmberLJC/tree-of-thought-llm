@@ -2,8 +2,8 @@ import re
 import os
 import sympy
 import pandas as pd
-from tot.tasks.base import Task, DATA_PATH
-from tot.prompts.game24 import * 
+from src.tot.tasks.base import Task, DATA_PATH
+from src.tot.prompts.game24 import * 
 
 
 def get_current_numbers(y: str) -> str:
@@ -45,7 +45,7 @@ class Game24Task(Task):
         expression = output.strip().split('\n')[-1].lower().replace('answer: ', '').split('=')[0]
         numbers = re.findall(r'\d+', expression)
         problem_numbers = re.findall(r'\d+', self.data[idx])
-        if sorted(numbers) != sorted(problem_numbers):
+        if set(numbers) != set(problem_numbers):
             return {'r': 0}
         try:
             # print(sympy.simplify(expression))
