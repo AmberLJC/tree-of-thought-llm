@@ -34,7 +34,7 @@ def run(args):
         print('Task id: ', i, 'pass: ', accs)
         cnt_avg += sum(accs) / len(accs)
         cnt_any += any(accs)
-        print('Overall sum(accuracy)', sum(accs), 'avg(accuracy)', cnt_avg, 'cnt_any', cnt_any, '\n')
+        print('Pass rate so far', cnt_any / (i+1))
     
     n = args.task_end_index - args.task_start_index
     print(cnt_avg / n, cnt_any / n)

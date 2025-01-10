@@ -23,6 +23,7 @@ client = AzureOpenAI(
         api_version=os.environ['API_VERSION'],
         organization=os.environ['OPENAI_ORGANIZATION'],
     )
+
 @backoff.on_exception(backoff.expo, openai.RateLimitError)
 def completions_with_backoff(**kwargs):
     return client.chat.completions.create(**kwargs)
